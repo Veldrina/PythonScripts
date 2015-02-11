@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a91f6ca3-4bfa-46e4-a7a6-79d5eb90486a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>transferHristBackupArchive.py</StartupFile>
+    <StartupFile>transferBackupArchive.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,7 +22,8 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="transferHristBackupArchive.py" />
+    <Compile Include="docopt.py" />
+    <Compile Include="transferBackupArchive.py" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
 </Project>
