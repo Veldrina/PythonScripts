@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PythonScripts", "PythonScripts\PythonScripts.pyproj", "{A91F6CA3-4BFA-46E4-A7A6-79D5EB90486A}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PythonScripts", "PythonScripts.pyproj", "{A91F6CA3-4BFA-46E4-A7A6-79D5EB90486A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +18,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {59A0EE90-62CA-4B19-93A6-6944602AD8C9}
 	EndGlobalSection
 EndGlobal

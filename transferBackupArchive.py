@@ -1,4 +1,4 @@
-"""
+﻿"""
 Usage: transferBackupArchive.py [--verbose]
 
 """
@@ -9,7 +9,7 @@ import sys
 from docopt import docopt
 
 
-sshControlPathCommand = r"ssh -o \'ControlPath=$HOME/.ssh/ctl/%L-%r@%h:%p\'"
+g_sshControlPathCommand = r"ssh -o \'ControlPath=$HOME/.ssh/ctl/%L-%r@%h:%p\'"
 
 def EstablishSSHControlMaster(user, host):
     sshControlMasterCommand =  "{0} {1}@{2}".format(
@@ -40,7 +40,7 @@ def TerminateSSHControlMaster(user, host):
 
 def ListSourceContents(user, host, dir):
     remoteListingCommand = "{0} {1}@{2} ls {3}".format(
-        sshControlPathCommand,
+        g_sshControlPathCommand,
         user,
         host,
         dir)
@@ -58,3 +58,5 @@ if __name__ == '__main__':
     print(arguments)
 
     EstablishSSHControlMaster(self.SourceUser, self.SourceHost)
+
+    TerminateSSHControlMaster(self.SourceUser, self.SourceHost)
