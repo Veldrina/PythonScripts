@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a91f6ca3-4bfa-46e4-a7a6-79d5eb90486a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>transferBackupArchive.py</StartupFile>
+    <StartupFile>veldrina_toolbox\mirror_file_layout.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -25,45 +25,22 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="docopt\conftest.py" />
-    <Compile Include="docopt\docopt.py" />
-    <Compile Include="docopt\examples\arguments_example.py" />
-    <Compile Include="docopt\examples\calculator_example.py" />
-    <Compile Include="docopt\examples\config_file_example.py" />
-    <Compile Include="docopt\examples\counted_example.py" />
-    <Compile Include="docopt\examples\git\git.py" />
-    <Compile Include="docopt\examples\git\git_add.py" />
-    <Compile Include="docopt\examples\git\git_branch.py" />
-    <Compile Include="docopt\examples\git\git_checkout.py" />
-    <Compile Include="docopt\examples\git\git_clone.py" />
-    <Compile Include="docopt\examples\git\git_commit.py" />
-    <Compile Include="docopt\examples\git\git_push.py" />
-    <Compile Include="docopt\examples\git\git_remote.py" />
-    <Compile Include="docopt\examples\interactive_example.py" />
-    <Compile Include="docopt\examples\naval_fate.py" />
-    <Compile Include="docopt\examples\odd_even_example.py" />
-    <Compile Include="docopt\examples\options_example.py" />
-    <Compile Include="docopt\examples\options_shortcut_example.py" />
-    <Compile Include="docopt\examples\quick_example.py" />
-    <Compile Include="docopt\examples\validation_example.py" />
-    <Compile Include="docopt\setup.py" />
-    <Compile Include="docopt\test_docopt.py" />
-    <Compile Include="transferBackupArchive.py" />
+    <Compile Include="setup.py" />
+    <Compile Include="veldrina_toolbox\mirror_file_layout.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="veldrina_toolbox\transferBackupArchive.py" />
+    <Compile Include="veldrina_toolbox\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="docopt\" />
-    <Folder Include="docopt\examples\" />
-    <Folder Include="docopt\examples\git\" />
+    <Folder Include="veldrina_toolbox\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="docopt\.gitignore" />
-    <Content Include="docopt\.travis.yml" />
-    <Content Include="docopt\LICENSE-MIT" />
-    <Content Include="docopt\MANIFEST.in" />
-    <Content Include="docopt\README.rst" />
-    <Content Include="docopt\setup.cfg" />
-    <Content Include="docopt\testcases.docopt" />
-    <Content Include="docopt\tox.ini" />
+    <Content Include="README.md">
+      <SubType>Code</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
 </Project>
