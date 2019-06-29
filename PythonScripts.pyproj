@@ -29,12 +29,16 @@
     <Compile Include="veldrina_toolbox\mirror_file_layout.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="veldrina_toolbox\transferBackupArchive.py" />
+    <Compile Include="veldrina_toolbox\transfer_backup_archive.py" />
     <Compile Include="veldrina_toolbox\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="test\mirror_file_layout_tests.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="test\" />
     <Folder Include="veldrina_toolbox\" />
   </ItemGroup>
   <ItemGroup>

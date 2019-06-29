@@ -25,36 +25,42 @@ class DuplicateFileHashException(Exception):
     def __init__(self, original_path: str, new_path: str):
         self.message = "Hash collision between '{0}' and '{1}'".format(original_path, new_path)
 
-def CalculateFileHashes(directory: str):
-    """ 
-    Calculates hashes for all files (recursively) in the specified directory.
-    The hash is generated from 8 KiB centered around the midpoint of the file, or the
-    entire file, whichever is smaller.
+def CollectHashesFromDirectory(directory: str):
     """
-    BUFFER_SIZE = 8 * 1024 * 1024
+    Calculates hashes for all files (recursively) in the specified directory.
+    """ 
     hashmap = {}
     for root, dirs, files in os.walk(directory):
         for name in files:
-            hasher = hashlib.sha256()
             file_path = os.path.join(root, name)
-            file_size = os.path.getsize(file_path)
             print("Processing {0}".format(file_path)) 
 
-            with open(file_path, "rb") as f:
-                if (file_size >= BUFFER_SIZE):
-                    seek_point = (file_size / 2) - (BUFFER_SIZE / 2)
-                    f.seek(seek_point)
-            
-                hasher.update(f.read(BUFFER_SIZE))
-
+            hash = CalculateFileHash(file_path)
             path = os.path.relpath(file_path, directory)
-            hash = hasher.hexdigest()
+            
             if (hash not in hashmap):
                 hashmap[hash] = SplitPathIntoComponents(path)
             else:
                 raise DuplicateFileHashException(hashmap[hash], path)
             print("Digest is: {0}".format(hash))
     return hashmap
+
+
+def CalculateFileHash(file_path: str):
+    """ 
+    The hash is generated from 8 KiB centered around the midpoint of the file, or the
+    entire file, whichever is smaller.
+    """
+    BUFFER_SIZE = 8 * 1024 * 1024
+    hasher = hashlib.sha256()
+    file_size = os.path.getsize(file_path)
+    with open(file_path, "rb") as f:
+        if (file_size >= BUFFER_SIZE):
+            seek_point = (file_size / 2) - (BUFFER_SIZE / 2)
+            f.seek(seek_point)
+            
+        hasher.update(f.read(BUFFER_SIZE))
+    return hasher.hexdigest()    
 
 def SplitPathIntoComponents(path: str):
     components = []
