@@ -26,16 +26,28 @@ class DuplicateFileHashException(Exception):
         self.message = "Hash collision between '{0}' and '{1}'".format(original_path, new_path)
 
 def CalculateFileHashes(directory: str):
+    """ 
+    Calculates hashes for all files (recursively) in the specified directory.
+    The hash is generated from 8 KiB centered around the midpoint of the file, or the
+    entire file, whichever is smaller.
+    """
+    BUFFER_SIZE = 8 * 1024 * 1024
     hashmap = {}
     for root, dirs, files in os.walk(directory):
         for name in files:
             hasher = hashlib.sha256()
-            print("Processing {0}".format(os.path.join(root, name)))
-            with open(os.path.join(root, name), "rb") as f:
-                for chunk in iter(lambda: f.read(2 * 1024 * 1024), b''): 
-                    hasher.update(chunk)
+            file_path = os.path.join(root, name)
+            file_size = os.path.getsize(file_path)
+            print("Processing {0}".format(file_path)) 
 
-            path = os.path.relpath(os.path.join(root, name), directory)
+            with open(file_path, "rb") as f:
+                if (file_size >= BUFFER_SIZE):
+                    seek_point = (file_size / 2) - (BUFFER_SIZE / 2)
+                    f.seek(seek_point)
+            
+                hasher.update(f.read(BUFFER_SIZE))
+
+            path = os.path.relpath(file_path, directory)
             hash = hasher.hexdigest()
             if (hash not in hashmap):
                 hashmap[hash] = SplitPathIntoComponents(path)
@@ -45,19 +57,19 @@ def CalculateFileHashes(directory: str):
     return hashmap
 
 def SplitPathIntoComponents(path: str):
-    folders = []
+    components = []
     while True:
         path, folder = os.path.split(path)
 
         if folder != "":
-            folders.append(folder)
+            components.append(folder)
         else:
             if path != "":
-                folders.append(path)
+                components.append(path)
             break
 
-    folders.reverse()
-    return folders
+    components.reverse()
+    return components
 
 def RecordFileLayout(path: str):
     raise NotImplementedError
