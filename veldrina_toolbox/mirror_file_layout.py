@@ -1,10 +1,10 @@
 """Mirror File Layout
 This tool will analyze a directory tree and record its structure, which can then be used to rearrange the contents
-of another directory  tree so that identical files have the same relative paths.
+of another directory tree so that identical files have the same relative paths.
 
 Usage:
-    mirror_file_layout.py record DIRECTORY FILE
-    mirror_file_layout.py replay DIRECTORY FILE
+    mirror_file_layout.py [-n | --dry-run] [-v | --verbose] (record | replay) DIRECTORY FILE
+    mirror_file_layout.py (-h | --help)
 
 Arguments:
     DIRECTORY   The directory to analyze (if recording) or rearrange (if replaying)
@@ -25,6 +25,14 @@ class DuplicateFileHashException(Exception):
     def __init__(self, original_path: str, new_path: str):
         self.message = "Hash collision between '{0}' and '{1}'".format(original_path, new_path)
 
+# Global script settings
+verbose_output: bool = False
+dry_run: bool = False
+
+def PrintVerboseOutput(message: str):
+    if (verbose_output):
+        print(message)
+
 def CollectHashesFromDirectory(directory: str):
     """
     Calculates hashes for all files (recursively) in the specified directory.
@@ -33,7 +41,7 @@ def CollectHashesFromDirectory(directory: str):
     for root, dirs, files in os.walk(directory):
         for name in files:
             file_path = os.path.join(root, name)
-            print("Processing {0}".format(file_path)) 
+            PrintVerboseOutput("Processing {0}".format(file_path)) 
 
             hash = CalculateFileHash(file_path)
             path = os.path.relpath(file_path, directory)
@@ -42,7 +50,7 @@ def CollectHashesFromDirectory(directory: str):
                 hashmap[hash] = SplitPathIntoComponents(path)
             else:
                 raise DuplicateFileHashException(hashmap[hash], path)
-            print("Digest is: {0}".format(hash))
+            PrintVerboseOutput("Digest is: {0}".format(hash))
     return hashmap
 
 
@@ -56,7 +64,7 @@ def CalculateFileHash(file_path: str):
     file_size = os.path.getsize(file_path)
     with open(file_path, "rb") as f:
         if (file_size >= BUFFER_SIZE):
-            seek_point = (file_size / 2) - (BUFFER_SIZE / 2)
+            seek_point = (file_size // 2) - (BUFFER_SIZE // 2)
             f.seek(seek_point)
             
         hasher.update(f.read(BUFFER_SIZE))
@@ -77,14 +85,27 @@ def SplitPathIntoComponents(path: str):
     components.reverse()
     return components
 
-def RecordFileLayout(path: str):
+def RecordFileLayout(target_directory_path: str, hash_file_path: str):
     raise NotImplementedError
 
-def ReplayFileLayout(path: str):
+def ReplayFileLayout(target_directory_path: str, hash_file_path: str):
     raise NotImplementedError
 
 if __name__ == "__main__":
     arguments = docopt(__doc__)
 
+    # Set script options based on arguments
+    verbose_output = arguments["--verbose"]
+    dry_run = arguments["--dry-run"]
 
     print(arguments)
+
+    # Perform invoked command
+    if (arguments["record"]):
+        RecordFileLayout(arguments["DIRECTORY"], arguments["FILE"])
+    elif (arguments["replay"]):
+        ReplayFileLayout(arguments["DIRECTORY"], arguments["FILE"])
+    else:
+        raise NotImplementedError("Unknown command")
+
+    

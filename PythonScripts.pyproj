@@ -12,6 +12,10 @@
     <OutputPath>.</OutputPath>
     <Name>PythonScripts</Name>
     <RootNamespace>PythonScripts</RootNamespace>
+    <IsWindowsApplication>False</IsWindowsApplication>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <CommandLineArguments>-n record c:\temp c:\foo.out</CommandLineArguments>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
