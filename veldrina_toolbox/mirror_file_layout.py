@@ -19,6 +19,8 @@ Options:
 import os
 import subprocess
 import hashlib
+import json
+from datetime import datetime
 from docopt import docopt
 
 class DuplicateFileHashException(Exception):
@@ -53,7 +55,6 @@ def CollectHashesFromDirectory(directory: str):
             PrintVerboseOutput("Digest is: {0}".format(hash))
     return hashmap
 
-
 def CalculateFileHash(file_path: str):
     """ 
     The hash is generated from 8 KiB centered around the midpoint of the file, or the
@@ -86,7 +87,14 @@ def SplitPathIntoComponents(path: str):
     return components
 
 def RecordFileLayout(target_directory_path: str, hash_file_path: str):
-    raise NotImplementedError
+    print("Recording file layout...")
+    start_time = datetime.now()
+    hashes = CollectHashesFromDirectory(target_directory_path)
+    with open(hash_file_path, "wt") as f:
+        json.dump(hashes, f)
+
+    end_time = datetime.now()
+    print("Done (took {0}).".format(end_time - start_time))
 
 def ReplayFileLayout(target_directory_path: str, hash_file_path: str):
     raise NotImplementedError
@@ -97,8 +105,6 @@ if __name__ == "__main__":
     # Set script options based on arguments
     verbose_output = arguments["--verbose"]
     dry_run = arguments["--dry-run"]
-
-    print(arguments)
 
     # Perform invoked command
     if (arguments["record"]):
