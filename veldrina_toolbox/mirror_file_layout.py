@@ -22,6 +22,7 @@ import hashlib
 import json
 from datetime import datetime
 from docopt import docopt
+from pathlib import Path
 
 class DuplicateFileHashException(Exception):
     def __init__(self, original_path: str, new_path: str):
@@ -49,7 +50,7 @@ def CollectHashesFromDirectory(directory: str):
             path = os.path.relpath(file_path, directory)
             
             if (hash not in hashmap):
-                hashmap[hash] = SplitPathIntoComponents(path)
+                hashmap[hash] = [part for part in Path(path).parts]
             else:
                 raise DuplicateFileHashException(hashmap[hash], path)
             PrintVerboseOutput("Digest is: {0}".format(hash))
@@ -71,24 +72,10 @@ def CalculateFileHash(file_path: str):
         hasher.update(f.read(BUFFER_SIZE))
     return hasher.hexdigest()    
 
-def SplitPathIntoComponents(path: str):
-    components = []
-    while True:
-        path, folder = os.path.split(path)
-
-        if folder != "":
-            components.append(folder)
-        else:
-            if path != "":
-                components.append(path)
-            break
-
-    components.reverse()
-    return components
-
 def RecordFileLayout(target_directory_path: str, hash_file_path: str):
     print("Recording file layout...")
     start_time = datetime.now()
+
     hashes = CollectHashesFromDirectory(target_directory_path)
     with open(hash_file_path, "wt") as f:
         json.dump(hashes, f)
@@ -97,7 +84,31 @@ def RecordFileLayout(target_directory_path: str, hash_file_path: str):
     print("Done (took {0}).".format(end_time - start_time))
 
 def ReplayFileLayout(target_directory_path: str, hash_file_path: str):
-    raise NotImplementedError
+    print("Replaying file layout...")
+    start_time = datetime.now()
+
+    source_hashes = {}
+    with open(hash_file_path, "rt") as f:
+        source_hashes = json.load(f)
+
+    target_hashes = CollectHashesFromDirectory(target_directory_path)
+
+    for hash in source_hashes:
+        source_relative_path = os.path.join(*source_hashes[hash])
+        if hash not in target_hashes:
+            print("'{0}' does not exist on target; skipping.".format(source_relative_path))
+        else:
+            target_relative_path = os.path.join(*target_hashes[hash])
+            if source_relative_path is not target_relative_path:
+                target_full_path = os.path.join(target_directory_path, target_relative_path)
+                new_target_full_path = os.path.join(target_directory_path, source_relative_path)
+
+                PrintVerboseOutput("Moving '{0}' to '{0}'".format(target_full_path, new_target_full_path))
+                if not dry_run:
+                    Path(target_full_path).rename(new_target_full_path)
+    
+    end_time = datetime.now()
+    print("Done (took {0}).".format(end_time - start_time))
 
 if __name__ == "__main__":
     arguments = docopt(__doc__)
