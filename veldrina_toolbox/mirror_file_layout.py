@@ -99,11 +99,11 @@ def ReplayFileLayout(target_directory_path: str, hash_file_path: str):
             print("'{0}' does not exist on target; skipping.".format(source_relative_path))
         else:
             target_relative_path = os.path.join(*target_hashes[hash])
-            if source_relative_path is not target_relative_path:
+            if source_relative_path != target_relative_path:
                 target_full_path = os.path.join(target_directory_path, target_relative_path)
                 new_target_full_path = os.path.join(target_directory_path, source_relative_path)
 
-                PrintVerboseOutput("Moving '{0}' to '{0}'".format(target_full_path, new_target_full_path))
+                PrintVerboseOutput("Moving '{0}' to '{1}'".format(target_full_path, new_target_full_path))
                 if not dry_run:
                     Path(target_full_path).rename(new_target_full_path)
     
