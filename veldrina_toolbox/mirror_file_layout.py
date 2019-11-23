@@ -105,6 +105,10 @@ def ReplayFileLayout(target_directory_path: str, hash_file_path: str):
 
                 PrintVerboseOutput("Moving '{0}' to '{1}'".format(target_full_path, new_target_full_path))
                 if not dry_run:
+                    try:
+                        Path(new_target_full_path).parent.mkdir(parents=True)
+                    except FileExistsError:
+                        pass
                     Path(target_full_path).rename(new_target_full_path)
     
     end_time = datetime.now()
